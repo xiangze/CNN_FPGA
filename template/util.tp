@@ -1,0 +1,29 @@
+{% macro delay(regname, orgname) -%}
+   {{reg}}
+     if(!resetn)
+       {{regname}}<=0;
+     else
+       {{regname}}<={{orgname}};
+{%- endmacro %}
+{% macro subst(regname, orgname) -%}
+   {{reg}}
+     if(!resetn)
+       {{regname}}<=0;
+     else
+       {{regname}}<={{orgname}};
+{%- endmacro %}
+
+{% macro counter(regname,resetcondition,enablecondition="") -%}
+   {{reg}}
+     if(!resetn)
+       {{regname}}<=0;
+     else if({{resetcondition}})
+       {{regname}}<=0;
+     {%if- enablecondition == "" -%}
+      else
+     {%- else -%}
+      else if({{enablecondition}})
+     {%- endif -%}	
+       {{regname}}<={{regname}}+1;
+
+{%- endmacro %}
