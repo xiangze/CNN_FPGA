@@ -28,8 +28,6 @@ module filter_n2_line(
        ren<=en;
 
    reg [10:0] waddr;
-   reg [10:0] raddr;
-    
    {{reg}}
      if(!resetn)
 	waddr<=0;
@@ -37,7 +35,8 @@ module filter_n2_line(
 	waddr<=0;
      else
 	waddr<=waddr+1;
-
+   
+   reg [10:0] raddr;
    {{reg}}
      if(!resetn)
 	raddr<=0;
@@ -46,10 +45,10 @@ module filter_n2_line(
      else
 	raddr<=raddr+1;
      
-   {% for m in n2 %}
+   {% for m in n1 %}
    {% for k in fn %}      
-     wire [9:0] 			     xin{{m}}_{{k}};
-     wire [9:0] 			     xout{{m}}_{{k}};
+     wire [{{width-1}}:0]	     xin{{m}}_{{k}};
+     wire [{{width-1}}:0]	     xout{{m}}_{{k}};
    {% if k==0 %}
      assign  xin{{m}}_{{k}=x{{m}};
    {% else %}
@@ -57,30 +56,30 @@ module filter_n2_line(
    {% endif %}    
      linebuffer l{{m}}_{{k}}(
   	         .clk(clk), .resetn(resetn),
-		 .out		(xout{{m}}_{{k}}[9:0]),
+		 .out		(xout{{m}}_{{k}}[{{width-1}}:0]),
 		 .ren		(ren),
 		 .wen		(en),
 		 .waddr		(waddr[10:0]),
 		 .raddr		(raddr[10:0]),
-		 .in		(xin{{m}}_{{k}}[9:0]));
+		 .in		(xin{{m}}_{{k}}[{{width-1}}:0]));
    {% endfor %}
    {% endfor %}
 
-   {% for m in n2 %}
+   {% for k in n1 %}
    {% for i in fn %} {% for j in fn %}
-     reg [9:0]      x_{{i}}_{{j}};
+     reg [{{width-1}}:0]    x{{k}}_{{i}}_{{j}};
    {{reg}}
      if(!resetn)
        x_{{i}}_{{j}}<=0;
      else
        {%- if j==0 -%}
-       x_{{i}}_{{j}}<=xout{{i}};
+       x{{k}}_{{i}}_{{j}}<=xout{{i}};
        {%- else -%}
-       x_{{i}}_{{j}}<=x_{{i}}_{{j-1}};
+       x{{k}}_{{i}}_{{j}}<=x{{k}}_{{i}}_{{j-1}};
        {%- endif -%}
    {% endfor %}	 {% endfor %}
 
-   filter_n2(
+   filter_n2 _filter_n2(
 	     .clk(clk), .resetn(resetn),.clip(clip),
 	     {% for m in n2 %} {% for k in n1 %}			       
 	     {% for i in fn %} {% for j in fn %}
@@ -88,8 +87,15 @@ module filter_n2_line(
      	     {% endfor %} {% endfor %}	     
 	     .b{{m}}_{{k}}(b{{m}}_{{k}}[{{width-1}}:0]  ),
 	     {% endfor %} {% endfor %}
+	     
 	     {% for k in n1 %}			       
-	     .x{{k}}_{{j}}_{{i}}(),    
+	     {% for i in fn %} {% for j in fn %}
+	     .x_{{k}}_{{j}}_{{i}}(x{{k}}_{{j}}_{{i}}[{{width-1}}:0]),
+     	     {% endfor %} {% endfor %}	     
+	     {% endfor %}
+	     
+	     {% for k in n2 %}
+	     out{{k}}(out{{k}}[{{width-1}}:0]),
 	     {% endfor %}
 	     .relu(relu),.relu_c(relu_c[7:0])
 	     );

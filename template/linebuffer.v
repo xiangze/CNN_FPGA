@@ -1,22 +1,22 @@
 module linebuffer(
-		  input 	      clk,
-		  input 	      ren,
-		  input 	      wen,
-		  input [9:0] 	      waddr;
-		  input [9:0] 	      raddr;
+		  input 			clk,
+		  input 			ren,
+		  input 			wen,
+		  input [{{lnlinewidth-1}}:0] 	waddr;
+		  input [{{lnlinewidth-1}}:0] 	raddr;
 		  
-		  input signed [9:0]  in,
-		  output signed [9:0] out
+		  input signed [{{width-1}}:0] 	in,
+		  output signed [{{width-1}}:0] out
 		  );
    
-   reg [9:0] 			      regs[1920-1:0];
+   reg [{{width-1}}:0] 				regs[{{linewidth-1}}:0];
    
    always@(posedge clk)
      if(ren)
        out<=regs[raddr];
 
    always@(posedge clk)
-     if(ren)
+     if(wen)
        regs[waddr]<=in;
 
 endmodule

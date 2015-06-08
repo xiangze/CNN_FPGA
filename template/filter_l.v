@@ -15,9 +15,7 @@ module filter_l(
   		 {% endfor %}
 		
 		 {% for k in n1[0] %}
-		 {% for i in fn %} {% for j in fn %}
-		 input signed [{{width-1}}:0] x{{k}}_{{j}}_{{i}},
-		 {% endfor %} {% endfor %}
+		 input signed [{{width-1}}:0] x{{k}},
 		 {% endfor %}
 		
 		 {% for k in n2[-1] %} 
@@ -29,16 +27,25 @@ module filter_l(
 		   
 		  {% for m in n2[l] %}
 		    wire [{{width-1}}:0] x{{l}}_{{m}};
-		    {% for k in n1[l] %}
-		      wire [{{width-1}}:0] out{{l}}_{{m}}_{{k}};
- 		  {% endfor %} {% endfor %}
+                  {% endfor %}
+		  {% for k in n1[l] %}
+		    wire [{{width-1}}:0] out{{l}}_{{k}};
+ 		  {% endfor %}
+		    //assert(n1[l]==n2[l-1])
+		  {% for m in n2[l] %}
+		    {% if l==0 %}
+		      assign x{{l}}_{{m}}=out{{l}}_{{m}};
+                    {% else %} 
+ 		      assign x{{l}}_{{m}}=x{{m}};
+                    {% endif %}
+                  {% endfor %}
 		    
 		   filter_n2_line filter_n2_{{l}}(
 					  .clk(clk), .resetn(resetn),.clip(clip),
 					  {% for m in n2 %} {% for k in n1 %}
 					  {% for i in fn %} {% for j in fn %}
 					  .w{{l}}_{{m}}_{{k}}_{{j}}_{{i}}(w{{l}}_{{m}}_{{k}}_{{j}}_{{i}}[{{width-1}}:0]  ),
- 						  {% endfor %} {% endfor %}
+					  {% endfor %} {% endfor %}
 					  .b{{m}}_{{k}}(b{{l}}_{{m}}_{{k}}[{{width-1}}:0]);
 					  {% endfor %} {% endfor %}
 						  
@@ -55,7 +62,7 @@ module filter_l(
 		 {% endfor %}
 
 		 {% for k in n2[-1] %} 		   
-		   assign out{{k}}=out{{k}};
+		   assign out{{k}}=out{{lnum-1}}_{{k}};
 		 {% endfor %}
 			      
 endmodule
