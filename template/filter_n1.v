@@ -1,4 +1,4 @@
-module filter_n1(
+module filter_n1_{{nn1}}(
 		  input 		       clk,
 		  input 		       resetn,
 		  input 		       clip,

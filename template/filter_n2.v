@@ -1,4 +1,4 @@
-module filter_n2(
+module filter_n2_{{nn1}}_{{nn2}}(
 		 input 			       clk,
 		 input 			       resetn,
 		 input 			       clip,
@@ -23,7 +23,7 @@ module filter_n2(
 		 );
    
    {% for m in n2 %}
-     filter_n1 filter_n1_{{m}}(
+     filter_n1_{{nn1}} filter_n1_{{m}}(
 			       .clk(clk), .resetn(resetn),.clip(clip),
 			       {% for k in n1 %}			       
   			       {% for i in fn %} {% for j in fn %}

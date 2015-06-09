@@ -1,4 +1,4 @@
-module filter_n2_line(
+module filter_n2_line_{{nn1}}_{{nn2}}(
 		 input 			       clk,
 		 input 			       resetn,
 		 input 			       clip,
@@ -78,8 +78,9 @@ module filter_n2_line(
        x{{k}}_{{i}}_{{j}}<=x{{k}}_{{i}}_{{j-1}};
        {%- endif -%}
    {% endfor %}	 {% endfor %}
+   {% endfor %}
 
-   filter_n2 _filter_n2(
+   filter_n2_{{nn1}}_{{nn2}} _filter_n2(
 	     .clk(clk), .resetn(resetn),.clip(clip),
 	     {% for m in n2 %} {% for k in n1 %}			       
 	     {% for i in fn %} {% for j in fn %}
@@ -100,5 +101,5 @@ module filter_n2_line(
 	     .relu(relu),.relu_c(relu_c[7:0])
 	     );
 
-   {% endfor %}
+
 endmodule

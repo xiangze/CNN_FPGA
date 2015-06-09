@@ -40,7 +40,7 @@ module filter_l(
                     {% endif %}
                   {% endfor %}
 		    
-		   filter_n2_line filter_n2_{{l}}(
+		   filter_n2_line_{{n1[l]}}_{{n2[l]}}  filter_n2_{{l}}(
 					  .clk(clk), .resetn(resetn),.clip(clip),
 					  {% for m in n2 %} {% for k in n1 %}
 					  {% for i in fn %} {% for j in fn %}
