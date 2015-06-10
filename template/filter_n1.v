@@ -7,16 +7,16 @@ module filter_n1_{{nn1}}(
   					       {% for k in n1 %}
   					       {% for i in fn %} {% for j in fn %}
 		  input signed [{{width-1}}:0] w{{k}}_{{j}}_{{i}},
-					       {% endfor %} {% endfor %} {% endfor %}
+					       {%- endfor %} {%- endfor %} {%- endfor %}
 					       {% for k in n1 %} 
 					       {% for i in fn %} {% for j in fn %}
 		  input signed [{{width-1}}:0] x{{k}}_{{j}}_{{i}},
-					       {% endfor %} {% endfor %}
-					       {% endfor %}
+					       {%- endfor %} {%- endfor %}
+					       {%- endfor %}
 		 
   					       {% for k in n1 %}
 		  input signed [{{width-1}}:0] b{{k}};
-		  {% endfor %} 
+		  {%- endfor %} 
 		  output signed reg [9:0] out
 		 );
 
@@ -28,10 +28,10 @@ module filter_n1_{{nn1}}(
   			    {% for i in fn %} {% for j in fn %}
 			    .w_{{j}}_{{i}}(w{{k}}_{{j}}_{{i}}[{{width-1}}:0]),
 			    .x_{{j}}_{{i}}(x{{k}}_{{j}}_{{i}}[{{width-1}}:0]),
-			    {% endfor %}   {% endfor %}
+			    {%- endfor %}   {%- endfor %}
 			    .b(b{{k}}[{{width-1}}:0])
 			    .out(out{{k}}[{{width-1}}:0]));
-   {% endfor %}
+   {%- endfor %}
      
    {% for l in ln1 %}   
      {% for k in ii[l] %}   
@@ -52,8 +52,8 @@ module filter_n1_{{nn1}}(
 	   out<=no_clip_{{l}}_{{k}}
 	 else
 	   out<={no_{{l}}_{{k}}[20:11]};       
-   {% endfor %}
-   {% endfor %}
+   {%- endfor %}
+   {%- endfor %}
 		
    wire [{{width*2}}:0] no;
    wire [{{width-1}}:0] no_clip;

@@ -7,17 +7,17 @@ module filter_n2_line_{{nn1}}_{{nn2}}(
 		 {% for m in n2 %}       {% for k in n1 %}
 	         {% for i in fn %} {% for j in fn %}
 		 input signed [{{width-1}}:0]  w{{m}}_{{k}}_{{j}}_{{i}},
- 	         {% endfor %} {% endfor %}
+ 	         {%- endfor %} {%- endfor %}
  		 input signed [{{width-1}}:0]  b{{m}}_{{k}};
- 		 {% endfor %} {% endfor %}
+ 		 {%- endfor %} {%- endfor %}
 
 		 {% for k in n1 %}
 		 input signed [{{width-1}}:0] x{{k}},
-		 {% endfor %}
+		 {%- endfor %}
 		 
 		 {% for k in n2 %} 
 		 output signed [{{width-1}}:0] out{{k}}
-		 {% endfor %}
+		 {%- endfor %}
 		 );
 
    reg ren;
@@ -62,8 +62,8 @@ module filter_n2_line_{{nn1}}_{{nn2}}(
 		 .waddr		(waddr[10:0]),
 		 .raddr		(raddr[10:0]),
 		 .in		(xin{{m}}_{{k}}[{{width-1}}:0]));
-   {% endfor %}
-   {% endfor %}
+   {%- endfor %}
+   {%- endfor %}
 
    {% for k in n1 %}
    {% for i in fn %} {% for j in fn %}
@@ -77,27 +77,27 @@ module filter_n2_line_{{nn1}}_{{nn2}}(
        {%- else -%}
        x{{k}}_{{i}}_{{j}}<=x{{k}}_{{i}}_{{j-1}};
        {%- endif -%}
-   {% endfor %}	 {% endfor %}
-   {% endfor %}
+   {%- endfor %}	 {%- endfor %}
+   {%- endfor %}
 
    filter_n2_{{nn1}}_{{nn2}} _filter_n2(
 	     .clk(clk), .resetn(resetn),.clip(clip),
 	     {% for m in n2 %} {% for k in n1 %}			       
 	     {% for i in fn %} {% for j in fn %}
 	     .w{{m}}_{{k}}_{{j}}_{{i}}(w{{m}}_{{k}}_{{j}}_{{i}}[{{width-1}}:0]),
-     	     {% endfor %} {% endfor %}	     
+     	     {%- endfor %} {%- endfor %}	     
 	     .b{{m}}_{{k}}(b{{m}}_{{k}}[{{width-1}}:0]  ),
-	     {% endfor %} {% endfor %}
+	     {%- endfor %} {%- endfor %}
 	     
 	     {% for k in n1 %}			       
 	     {% for i in fn %} {% for j in fn %}
 	     .x_{{k}}_{{j}}_{{i}}(x{{k}}_{{j}}_{{i}}[{{width-1}}:0]),
-     	     {% endfor %} {% endfor %}	     
-	     {% endfor %}
+     	     {%- endfor %} {%- endfor %}	     
+	     {%- endfor %}
 	     
 	     {% for k in n2 %}
 	     out{{k}}(out{{k}}[{{width-1}}:0]),
-	     {% endfor %}
+	     {%- endfor %}
 	     .relu(relu),.relu_c(relu_c[7:0])
 	     );
 
