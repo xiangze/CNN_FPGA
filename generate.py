@@ -9,6 +9,9 @@ def fwrite(f,fname):
     with open(fname,"w") as fw:
         fw.write(f.encode('utf-8'))
 
+def renderfromfile(tempname,d,outfname):
+    fwrite(frender(tempname,d) ,outfname)
+        
 width=10
 fn=range(3)
 
@@ -29,15 +32,12 @@ for l in xrange(lnum):
     
     n1s.append(n1)
     n2s.append(n2)
+    d={'width':width,'fn':fn,'nn1':n, 'nn2':m, 'n1':n1, 'n2':n2}
     
-    f=frender("template/filter_n1.v",{'width':width,'fn':fn,'nn1':n,'n1':n1})
-    fwrite(f,"filter_n1_%d.v"%n)
+    renderfromfile(frender("template/filter_n1.v",d) ,"filter_n1_%d.v"%n)
+    renderfromfile(frender("template/filter_n2.v",d) ,"filter_n2_%d.v"%m)
+    renderfromfile(frender("template/filter_line_n2.v",d) ,"filter_n2_line_%d.v"%m)
 
-    f=frender("template/filter_n2.v",{'width':width,'fn':fn,'nn2':m,'n1':n1, 'n2':n2})
-    fwrite(f,"filter_n2_%d.v"%m)
 
-    f=frender("template/filter_n2.v",{'width':width,'fn':fn,'nn2':m,'n1':n1, 'n2':n2})
-    fwrite(f,"filter_n2_%d.v"%m)
-
-f=frender("template/filter_l.v",{'width':width,'fn':fn,'n1':n1s,'n2':n2s,'ls':range(lnum),'lnum':lnum})
-fwrite(f,"filter_l_%d.v"%lnum)
+d={'width':width,'fn':fn,'n1':n1s,'n2':n2s,'ls':range(lnum),'lnum':lnum}
+renderfromfile(frender("template/filter_l.v",d) ,"filter_l_%d.v"%lnum)
