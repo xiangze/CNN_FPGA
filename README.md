@@ -13,6 +13,7 @@ ToDo
 * state machine (must)
 * memory(DRAM) contoroller (must) 
 * converter from t7 file
+* maxpooling
 * learning function/back propagation
 * soft activation functions/sigmoid,tanh
 * RNN
